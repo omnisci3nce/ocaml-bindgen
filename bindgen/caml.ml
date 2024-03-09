@@ -34,12 +34,16 @@ let rec core_type_from_ir typ =
   | Ir.Prim Void -> Typ.constr (lid "unit") []
   | Ir.Ptr t -> core_type_from_ir t
   | Ir.Func { fn_ret; fn_params } ->
+      let unit_or_fn_params = match fn_params with
+      | [] -> [("", (Ir.Prim Void))]
+      | _ -> fn_params
+      in
       List.fold_left
         (fun acc (name, typ) ->
-          let label = Asttypes.Labelled name in
+          let label = if String.equal name "" then Asttypes.Nolabel else Asttypes.Labelled name in
           let typ = core_type_from_ir typ in
           Typ.arrow label typ acc)
-        (core_type_from_ir fn_ret) fn_params
+        (core_type_from_ir fn_ret) unit_or_fn_params
 
 let type_from_ir typ =
   match typ with
