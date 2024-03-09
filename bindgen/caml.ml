@@ -34,6 +34,7 @@ let rec core_type_from_ir typ =
   | Ir.Prim Void -> Typ.constr (lid "unit") []
   | Ir.Ptr t -> core_type_from_ir t
   | Ir.Func { fn_ret; fn_params } ->
+      (* If the C function declaration has no parameters we must introduce a `unit` param *)
       let unit_or_fn_params = match fn_params with
       | [] -> [("", (Ir.Prim Void))]
       | _ -> fn_params
