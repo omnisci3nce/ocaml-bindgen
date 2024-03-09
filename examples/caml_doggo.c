@@ -33,11 +33,10 @@ void caml_eleven_out_of_ten_majestic_af(value caml_pupper) {
   CAMLreturn0;
 }
 
-Doggo caml_make_a_doggo() {
+void caml_no_input_no_output() {
   CAMLparam0();
-  CAMLlocal1(result);
-  result = make_a_doggo();
-  CAMLreturn(result);
+  no_input_no_output();
+  CAMLreturn0;
 }
 
 

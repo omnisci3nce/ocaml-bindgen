@@ -11,4 +11,4 @@ type nonrec doggo = {
   weight: float }
 external eleven_out_of_ten_majestic_af :
   pupper:doggo -> unit = "caml_eleven_out_of_ten_majestic_af"
-external make_a_doggo : unit -> doggo = "caml_make_a_doggo"
+external no_input_no_output : unit -> unit = "caml_no_input_no_output"
