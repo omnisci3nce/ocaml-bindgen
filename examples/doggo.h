@@ -15,5 +15,5 @@
 // void eleven_out_of_ten_majestic_af(Doggo* pupper);
 
 void print_age(int* age);
-// void print_name(char* name);
+void print_name(char* name);
 // void print_doggo(Doggo *dog);

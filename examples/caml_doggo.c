@@ -14,6 +14,13 @@ void caml_print_age(value caml_age) {
   CAMLreturn0;
 }
 
+void caml_print_name(value caml_name) {
+  CAMLparam1(caml_name);
+  char* name = Nativeint_val(Field(caml_name, 1));
+  print_name(name);
+  CAMLreturn0;
+}
+
 
 #include <stdlib.h>
 value bindgen_alloc(value caml_size) {
@@ -35,4 +42,10 @@ value bindgen_alloc(value caml_size) {
 
 void bindgen_free(value caml_addr) {
     free(Nativeint_val(caml_addr));
-} 
+}
+
+value bindgen_alloc_string(value caml_string) {
+  CAMLparam1(caml_string);
+    char* str = String_val(caml_string);
+    CAMLreturn(caml_copy_nativeint((intnat)str));
+}

@@ -21,9 +21,9 @@
 void print_age(int* age) {
   printf("Age: %d\n", *age);
 }
-// void print_name(char* name) {
-//   printf("Name: %s\n", name);
-// }
+void print_name(char* name) {
+  printf("Name: %s\n", name);
+}
 // void print_doggo(Doggo *dog) {
 //   printf("wow: %c\n", dog->wow);
 //   print_age(&dog->many);

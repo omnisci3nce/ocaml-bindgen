@@ -11,6 +11,7 @@ type 'a cptr = { lifetime : lifetime; addr : nativeint }
 
 external bindgen_alloc : size:int -> nativeint = "bindgen_alloc"
 external bindgen_free : nativeint -> unit = "bindgen_free"
+external bindgen_alloc_string : string -> nativeint = "bindgen_alloc_string"
 
 let sizeof _ = 4 (* TODO: how to handle different types? *)
 
@@ -20,4 +21,8 @@ let create_ptr (value : 'a) : 'a cptr =
   Gc.finalise bindgen_free addr;
   { lifetime = Ocaml; addr }
 
+let make_cstr (s: string) : char cptr =
+  let addr = bindgen_alloc_string s in
+  { lifetime = Ocaml; addr }
 external print_age : age:int cptr -> unit = "caml_print_age"
+external print_name : name:char cptr -> unit = "caml_print_name"
