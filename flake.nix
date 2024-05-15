@@ -45,7 +45,7 @@
         };
 
         devShells = {
-          default = pkgs.mkShell {
+          default = pkgs.mkShell.override { stdenv = pkgs.clang17Stdenv; } {
             inputsFrom = [
               self'.packages.default
             ];
