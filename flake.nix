@@ -7,7 +7,7 @@
     clangml = {
       url = "github:thierry-martinez/clangml/main";
       flake = false;
-      # inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -26,15 +26,13 @@
           inherit (pkgs) ocamlPackages mkShell lib;
       in
       {
-        # Per-system attributes can be defined here. The self' and inputs'
-        # module parameters provide easy access to attributes of the same
-        # system.
-        
-        # Equivalent to  inputs'.nixpkgs.legacyPackages.hello;
         packages = {
           default = ocamlPackages.buildDunePackage {
-            # version = "dev"
-            propagatedBuildInputs
+            version = "dev";
+            pname = "bindgen";
+            propagatedBuildInputs = with ocamlPackages; [
+              inputs'.clangml.packages.default # It does *not* like this. I guess this is only for other repos with flake.nix
+            ];
           };
         };
 
@@ -45,6 +43,7 @@
             ];
             packages = with pkgs; [
               llvmPackages_15.llvm
+              ncurses
             ];
             buildInputs = with ocamlPackages; [
               ocaml
