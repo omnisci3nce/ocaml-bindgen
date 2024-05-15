@@ -7,31 +7,39 @@
     clangml = {
       url = "github:thierry-martinez/clangml/main";
       flake = false;
-      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
   outputs = inputs@{ flake-parts, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
-      imports = [
-        # To import a flake module
-        # 1. Add foo to inputs
-        # 2. Add foo as a parameter to the outputs function
-        # 3. Add here: foo.flakeModule
-
-      ];
+      imports = [];
       systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" "x86_64-darwin" ];
       perSystem = { config, self', inputs', pkgs, system, ... }: 
       let 
           inherit (pkgs) ocamlPackages mkShell lib;
+
+          clangml = ocamlPackages.buildDunePackage {
+            pname = "clangml";
+            version = "dev";
+            src = pkgs.fetchFromGitHub {
+              owner = "thierry-martinez";
+              repo = "clangml";
+              rev = "5651dedd52e32d721579ac7412d4404902584df3";
+              sha256 = "sha256-kMQNulF8thYOicM9guNlNqtlWhxPoGeVD85T+GwBNkY=";
+            };
+            buildInputs = with pkgs; [];
+          };
       in
       {
         packages = {
           default = ocamlPackages.buildDunePackage {
             version = "dev";
             pname = "bindgen";
+            buildInputs = [
+              # clangml ?
+            ];
             propagatedBuildInputs = with ocamlPackages; [
-              inputs'.clangml.packages.default # It does *not* like this. I guess this is only for other repos with flake.nix
+              # clangml ?
             ];
           };
         };
@@ -44,11 +52,13 @@
             packages = with pkgs; [
               llvmPackages_15.llvm
               ncurses
+              clangml
             ];
             buildInputs = with ocamlPackages; [
               ocaml
               ppxlib
               stringext
+              clangml
             ];
           };
         };
