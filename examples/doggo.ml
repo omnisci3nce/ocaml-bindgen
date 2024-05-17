@@ -4,11 +4,13 @@ type nonrec breed =
   | C__GoldenRetriever 
   | C_pug 
   | C__poodle 
-type nonrec doggo = {
+type nonrec doggo =
+  {
   many: int ;
   breed: breed ;
   wow: char ;
-  weight: float }
+  weight: float ;
+  nicknames: string array }
 external eleven_out_of_ten_majestic_af :
   pupper:doggo -> unit = "caml_eleven_out_of_ten_majestic_af"
 external no_input_no_output : unit -> unit = "caml_no_input_no_output"

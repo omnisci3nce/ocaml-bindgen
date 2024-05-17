@@ -7,6 +7,8 @@ type ir_type =
   | Prim of ir_prim_type
   | Ptr of ir_type
   | Func of { fn_ret : ir_type; fn_params : (string * ir_type) list }
+  | Array of { n_elements : int option; typ : ir_type }
+      (** Some indicates a constant size array, None indicates a flexible member array *)
 
 and ir_field = { fld_name : string; fld_type : ir_type }
 and ir_enum_variant = { variant_name : string; constant : int }
@@ -20,7 +22,7 @@ module Lift = struct
     match name with Clang.Ast.IdentifierName x -> x | _ -> assert false
 
   let rec lift_type (typ : Clang.Type.t) =
-    (* Format.printf "lift_type: %S\n" (Clang.Type.show typ); *)
+    Format.printf "lift_type: %S\n" (Clang.Type.show typ);
     match typ.desc with
     | Clang.Ast.BuiltinType Int -> Prim Int
     | Clang.Ast.BuiltinType Float -> Prim Float
@@ -29,6 +31,8 @@ module Lift = struct
     | Clang.Ast.BuiltinType Void -> Prim Void
     | Clang.Ast.Pointer t -> Ptr (lift_type t)
     | Clang.Ast.Typedef t -> Abstract (lift_name t.name)
+    | Clang.Ast.ConstantArray { element; size; _ } ->
+        Array { n_elements = Some size; typ = lift_type element }
     | _ -> assert false
 
   let lift_record_field (field : Clang.Ast.decl) =

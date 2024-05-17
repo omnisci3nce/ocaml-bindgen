@@ -32,6 +32,8 @@ let rec core_type_from_ir typ =
   | Ir.Prim Bool -> Typ.constr (lid "bool") []
   | Ir.Prim Char -> Typ.constr (lid "char") []
   | Ir.Prim Void -> Typ.constr (lid "unit") []
+  | Ir.Ptr (Ir.Prim Char) ->
+      Typ.constr (lid "string") [] (* Special case char* into a string *)
   | Ir.Ptr t -> core_type_from_ir t
   | Ir.Func { fn_ret; fn_params } -> (
       match fn_params with
@@ -47,6 +49,9 @@ let rec core_type_from_ir typ =
               let typ = core_type_from_ir typ in
               Typ.arrow label typ acc)
             (core_type_from_ir fn_ret) params)
+  | Ir.Array { typ; _ } ->
+      let element_type = core_type_from_ir typ in
+      Typ.constr (lid "array") [ element_type ]
 
 let type_from_ir typ =
   match typ with

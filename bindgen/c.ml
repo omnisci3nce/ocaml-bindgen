@@ -110,6 +110,7 @@ let rec ctype_of_ir (ir_type : Ir.ir_type) =
   | Ir.Prim Ir.Void -> Void
   | Ir.Ptr t -> Ptr (ctype_of_ir t)
   | Ir.Func _ -> assert false
+  | Ir.Array _ -> assert false
 
 let rec ctype_name typ =
   match typ with
